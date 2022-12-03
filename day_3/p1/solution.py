@@ -1,6 +1,10 @@
+import string
+
+
 def solution(
     input_file_path: str
 ) -> int:
+    ascii_letters = string.ascii_lowercase + string.ascii_uppercase
     priorities_sum = 0
 
     with open(input_file_path) as fs_r:
@@ -11,11 +15,6 @@ def solution(
                 set(rucksack[rucksack_half:])
             ).pop()
 
-            priority_correction = \
-                1 - ord('a') if str.islower(shared_item) \
-                else 27 - ord('A')
-            shared_item_priority = ord(shared_item) + priority_correction
-
-            priorities_sum += shared_item_priority
+            priorities_sum += ascii_letters.index(shared_item) + 1
 
     return priorities_sum 
