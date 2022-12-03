@@ -15,9 +15,7 @@ def solution(
                     fs_r.__next__()
                 )
             )
-            shared_item = list(
-                set.intersection(*group_rucksacks)
-            )[0]
+            shared_item = set.intersection(*group_rucksacks).pop()
 
             priority_correction = \
                 1 - ord('a') if str.islower(shared_item) \

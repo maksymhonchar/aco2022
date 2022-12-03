@@ -6,10 +6,10 @@ def solution(
     with open(input_file_path) as fs_r:
         for rucksack in fs_r:
             rucksack_half = len(rucksack) // 2
-            shared_item = list(
+            shared_item = (
                 set(rucksack[:rucksack_half]) & \
                 set(rucksack[rucksack_half:])
-            )[0]
+            ).pop()
 
             priority_correction = \
                 1 - ord('a') if str.islower(shared_item) \
