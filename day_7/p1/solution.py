@@ -6,40 +6,34 @@ from typing import DefaultDict, Dict
 def solution(
     input_file_path: str
 ) -> int:
-    files: Dict[str, int] = {}
-    current_dir = ''
+    files_size: Dict[str, int] = {}
+    dirs_size: DefaultDict[str, int] = defaultdict(int)
+    current_dir = []
     with open(input_file_path) as fs_r:
         for line in fs_r:
             if line.startswith('$ cd'):
-                args_sep = ' '
-                cmd = line[len('$ '):].strip()
-                _, cd_dir = cmd.split(args_sep)
+                cd_dir = line[len('$ cd '):].strip()
                 if cd_dir == '/':
-                    current_dir = 'root'
+                    current_dir.append('root')
                 elif cd_dir == '..':
-                    children = current_dir.split(os.sep)[:-1]
-                    current_dir = os.sep.join(children)
+                    current_dir.pop()
                 else:
-                    current_dir = os.path.join(current_dir, cd_dir)
-            elif line.startswith('$ ls'):
-                continue
-            else:
-                if not line.startswith('dir'):
-                    size, name = line.strip().split(' ')
-                    path = os.path.join(current_dir, name)
-                    files[path] = int(size)
+                    current_dir.append(cd_dir)
+            elif str.isnumeric(line[0]):
+                size, name = line.strip().split(' ')
+                file_path = os.sep.join(current_dir + [name])
+                files_size[file_path] = int(size)
+                for parent_dir_idx in range(len(current_dir)):
+                    parent_dir_path = os.sep.join(
+                        current_dir[:parent_dir_idx+1]
+                    )
+                    dirs_size[parent_dir_path] += files_size[file_path]
 
-    folders_size: DefaultDict[str, int] = defaultdict(int)
-    for file_path, file_size in files.items():
-        parent_dirs = file_path.split(os.sep)[:-1]
-        for parent_idx in range(len(parent_dirs)):
-            folder = os.sep.join(parent_dirs[:parent_idx + 1])
-            folders_size[folder] += file_size
-
+    dir_size_threshold = 100_000
     return sum(
         [
             value
-            for value in folders_size.values()
-            if value <= 100000
+            for value in dirs_size.values()
+            if value <= dir_size_threshold
         ]
     )

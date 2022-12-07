@@ -2,7 +2,7 @@ from solution import solution
 
 
 def main():
-    input_file_path = 'day_7/inputs/test.in'
+    input_file_path = 'day_7/inputs/problem.in'
 
     result = solution(input_file_path)
     print(f'{result=}')
