@@ -1,33 +1,26 @@
 import os
 from collections import defaultdict
-from typing import DefaultDict, Dict
+from typing import DefaultDict, List
 
 
 def solution(
     input_file_path: str
 ) -> int:
-    files_size: Dict[str, int] = {}
     dirs_size: DefaultDict[str, int] = defaultdict(int)
-    current_dir = []
+    current_dir: List[str] = []
     with open(input_file_path) as fs_r:
         for line in fs_r:
             if line.startswith('$ cd'):
                 cd_dir = line[len('$ cd '):].strip()
-                if cd_dir == '/':
-                    current_dir.append('root')
-                elif cd_dir == '..':
+                if cd_dir == '..':
                     current_dir.pop()
                 else:
                     current_dir.append(cd_dir)
             elif str.isnumeric(line[0]):
-                size, name = line.strip().split(' ')
-                file_path = os.sep.join(current_dir + [name])
-                files_size[file_path] = int(size)
-                for parent_dir_idx in range(len(current_dir)):
-                    parent_dir_path = os.sep.join(
-                        current_dir[:parent_dir_idx+1]
-                    )
-                    dirs_size[parent_dir_path] += files_size[file_path]
+                file_size = int(line.split(' ')[0])
+                for dir_idx in range(len(current_dir)):
+                    dir_path = os.sep.join(current_dir[:dir_idx+1])
+                    dirs_size[dir_path] += file_size
 
     dir_size_threshold = 100_000
     return sum(
