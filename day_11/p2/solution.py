@@ -87,7 +87,7 @@ def solution(
             monkey.parse(monkey_str)
             monkeys.append(monkey)
 
-    # LCM idea: https://github.com/derivz/AoC2022/blob/master/day9/solution.py
+    # LCM idea: https://github.com/derivz/AoC2022/blob/master/day11/solution.py#L48
     common_divisor = int(
         np.lcm.reduce(
             [
